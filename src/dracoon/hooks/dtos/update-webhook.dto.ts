@@ -1,31 +1,19 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger"
 import { IsArray, IsBoolean, IsEnum, IsNotEmpty, IsOptional, IsString } from "class-validator"
 import { ActionTypeNames, EventTypeNames } from "../hook.enums"
-import { WebhookType } from "../hooks.models"
 
+// payload to update a webhook in service
+export class UpdateWebhookDto {
 
-// payload to register a webhook with service
-export class RegisterWebhookDto {
-
-    @ApiProperty()
-    @IsNotEmpty()
+    @ApiPropertyOptional()
+    @IsOptional()
     @IsString()
     name: string
 
-    @ApiProperty({ enum: WebhookType })
-    @IsNotEmpty()
-    @IsEnum(WebhookType)
-    hookType: WebhookType
-
-    @ApiProperty({ enum: EventTypeNames })
-    @IsNotEmpty()
-    @IsEnum(EventTypeNames)
-    eventTypeName: EventTypeNames
-
-    @ApiProperty({ enum: ActionTypeNames, isArray: true })
+    @ApiPropertyOptional({ enum: ActionTypeNames, isArray: true })
+    @IsOptional()
     @IsNotEmpty({ each: true })
     @IsArray()
-    @IsString({ each: true })
     @IsEnum(ActionTypeNames, {each: true})
     actionTypeNames: ActionTypeNames[]
 
@@ -39,9 +27,24 @@ export class RegisterWebhookDto {
     @IsBoolean()
     isEnabled: boolean
 
+}
+
+// payload to update a webhook in DRACOON
+export class UpdateDracoonWebhookDto {
+
+    @ApiPropertyOptional()
+    @IsOptional()
+    @IsString()
+    name: string
+
+    @ApiPropertyOptional()
+    @IsOptional()
+    @IsString() 
+    secret: string
+
     @ApiPropertyOptional()
     @IsOptional()
     @IsBoolean()
-    triggerExampleEvent: boolean
+    isEnabled: boolean
 
 }

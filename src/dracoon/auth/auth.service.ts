@@ -12,6 +12,8 @@ export class AuthService {
   getUserInfo(accessToken: string): Observable<UserAccount> {
 
     if (!accessToken) throw new UnauthorizedException();
+
+    console.log(accessToken)
     
     const userInfoUrl = '/api/v4/user/account';
     // axios request config
@@ -24,6 +26,7 @@ export class AuthService {
 
     return this.httpService.get(userInfoUrl, options).pipe(
         catchError((e) => {
+
             // forward DRACOON error 
             throw new HttpException(e.response.data, e.response.status);
         }),
