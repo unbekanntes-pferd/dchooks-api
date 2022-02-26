@@ -4,20 +4,21 @@ import { DracoonAuthConfigManagerGuard, DracoonAuthGuard } from '../../auth/auth
 import { RegisterWebhookDto } from '../dtos/register-webhook.dto';
 import { HooksService } from '../hooks.service';
 import { Webhook } from '../hooks.models';
-import { ConfigService } from '@nestjs/config';
 import { ErrorResponse } from 'src/app.models';
 import { Hook } from '../hook.entity';
 import { FindOneParams } from 'src/app.params';
 import { UpdateWebhookDto } from '../dtos/update-webhook.dto';
 import RequestWithUserAccount from 'src/dracoon/auth/request-with-user.interface';
+import { EventService } from '../event.service';
+import { HookEvent } from '../event.entity';
  
 @ApiBearerAuth('DRACOON Access Token')
-@ApiTags('hooks')
+@ApiTags('hook administration')
 @Controller('hooks')
 @UseGuards(DracoonAuthGuard)
 export class HooksController {
 
-    constructor(private readonly hooksService: HooksService, private readonly configService: ConfigService) {}
+    constructor(private readonly hooksService: HooksService, private readonly eventService: EventService) {}
 
     @UseGuards(DracoonAuthConfigManagerGuard)
     @Get('')
@@ -71,6 +72,27 @@ export class HooksController {
 
         return this.hooksService.registerHook(req.token, registerHookDto);
     };
+
+    @UseGuards(DracoonAuthConfigManagerGuard)
+    @Get('/events')
+    @ApiOperation({
+        summary: 'List all webhook events',
+        description: 'List all events of all registered webhooks'
+    })
+    @ApiOkResponse({
+        status: HttpStatus.OK,
+        description: 'OK',
+        type: [HookEvent]
+    })
+    @ApiUnauthorizedResponse({
+        status: HttpStatus.UNAUTHORIZED,
+        description: 'Unauthorized',
+        type: ErrorResponse
+    })
+    async listHookEvents() {
+
+        return this.eventService.getEvents();
+    }
 
 
     @UseGuards(DracoonAuthConfigManagerGuard)
@@ -184,6 +206,42 @@ export class HooksController {
         await this.hooksService.unregisterWebhook(req.token, hook);
 
         return;
+    };
+
+    @UseGuards(DracoonAuthConfigManagerGuard)
+    @Get(':id/events')
+    @ApiOperation({
+        summary: 'Get webhook events',
+        description: 'Get events of registered webhook'
+    })
+    @ApiOkResponse({
+        status: HttpStatus.OK,
+        description: 'OK',
+        type: [HookEvent]
+    })
+    @ApiBadRequestResponse({
+        status: HttpStatus.BAD_REQUEST,
+        description: 'Unauthorized',
+        type: ErrorResponse
+    })
+    @ApiUnauthorizedResponse({
+        status: HttpStatus.UNAUTHORIZED,
+        description: 'Unauthorized',
+        type: ErrorResponse
+    })
+    @ApiNotFoundResponse({
+        status: HttpStatus.NOT_FOUND,
+        description: 'Unauthorized',
+        type: ErrorResponse
+    })
+    @ApiParam({
+        name: 'id',
+        type: String,
+        required: true
+    })
+    async getHookEvents(@Param() params: FindOneParams) {
+
+        return this.eventService.getHookEvents(params.id);
     };
 
 }

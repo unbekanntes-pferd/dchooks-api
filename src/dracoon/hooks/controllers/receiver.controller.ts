@@ -1,5 +1,5 @@
 import { Body, Controller, HttpCode, HttpStatus, NotImplementedException, Param, Post, Req, UseGuards } from "@nestjs/common";
-import { ApiAcceptedResponse, ApiBadRequestResponse, ApiHeader, ApiOperation, ApiParam, ApiTags, ApiUnauthorizedResponse } from "@nestjs/swagger";
+import { ApiAcceptedResponse, ApiBadRequestResponse, ApiForbiddenResponse, ApiHeader, ApiOperation, ApiParam, ApiTags, ApiUnauthorizedResponse } from "@nestjs/swagger";
 import { ErrorResponse } from "src/app.models";
 import { FindOneParams } from "src/app.params";
 import { NodeWebhookDto } from "../dtos/node-webhook.dto";
@@ -7,7 +7,7 @@ import RequestWithHook from "../request-with-hook.interface";
 import { UserWebhookDto } from "../dtos/user-webhook.dto";
 import { DracoonSignatureGuard, FileRequestHookGuard, NodeHookGuard, ShareHookGuard, UserHookGuard } from "../hook.guard";
 import { ActionService } from "../action.service";
-import { Payload } from "@nestjs/microservices";
+
 
 @ApiTags('hooks')
 @UseGuards(DracoonSignatureGuard)
@@ -45,12 +45,17 @@ export class ReceiverController {
         description: 'Unauthorized',
         type: ErrorResponse
     })
+    @ApiForbiddenResponse({
+        status: HttpStatus.FORBIDDEN,
+        description: 'Forbidden',
+        type: ErrorResponse
+    })
     @UseGuards(NodeHookGuard)
     @Post('node/:id')
     @HttpCode(202)
     handleNodeWebhook(@Param() params: FindOneParams, @Body() payload: NodeWebhookDto, @Req() request: RequestWithHook) { 
 
-        return this.actionService.handleNodeHook(payload, request.hook);
+        return this.actionService.handleNodeHook(payload, request.hook, request.event);
     }
 
     @ApiHeader({
@@ -82,13 +87,18 @@ export class ReceiverController {
         description: 'Unauthorized',
         type: ErrorResponse
     })
+    @ApiForbiddenResponse({
+        status: HttpStatus.FORBIDDEN,
+        description: 'Forbidden',
+        type: ErrorResponse
+    })
     @UseGuards(UserHookGuard)
     @Post('user/:id')
     @HttpCode(202)
     async handleUserWebhook(@Param() params: FindOneParams, @Body() payload: UserWebhookDto, @Req() request: RequestWithHook) { 
 
-        return this.actionService.handleUserHook(payload, request.hook);
-        
+        return this.actionService.handleUserHook(payload, request.hook, request.event);
+
     }
 
     @ApiHeader({
@@ -121,11 +131,16 @@ export class ReceiverController {
         description: 'Unauthorized',
         type: ErrorResponse
     })
+    @ApiForbiddenResponse({
+        status: HttpStatus.FORBIDDEN,
+        description: 'Forbidden',
+        type: ErrorResponse
+    })
     @UseGuards(ShareHookGuard)
     @HttpCode(202)
     handleShareWebhook(@Param() params: FindOneParams, @Body() payload, @Req() request: RequestWithHook) { 
 
-        return this.actionService.handleShareHook(payload, request.hook);
+        return this.actionService.handleShareHook(payload, request.hook, request.event);
     }
 
     @ApiHeader({
@@ -159,10 +174,15 @@ export class ReceiverController {
         description: 'Unauthorized',
         type: ErrorResponse
     })
+    @ApiForbiddenResponse({
+        status: HttpStatus.FORBIDDEN,
+        description: 'Forbidden',
+        type: ErrorResponse
+    })
     @HttpCode(202)
     handleFileRequestWebhook(@Param() params: FindOneParams, @Body() payload, @Req() request: RequestWithHook) { 
 
-        return this.actionService.handleFileRequestHook(payload, request.hook);
+        return this.actionService.handleFileRequestHook(payload, request.hook, request.event);
     }
 
 }

@@ -6,6 +6,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import configuration from './config/configuration';
 import { Hook } from './dracoon/hooks/hook.entity';
+import { HookEvent } from './dracoon/hooks/event.entity';
 
 @Module({
   imports: [DracoonModule, 
@@ -23,7 +24,7 @@ import { Hook } from './dracoon/hooks/hook.entity';
       username: config.get('database.user'),
       password: config.get('database.password'),
       database: config.get('database.database'),
-      entities: [Hook],
+      entities: [Hook, HookEvent],
       synchronize: false,
       migrations: ['dist/src/migrations/*.js'],
       cli: {

@@ -38,7 +38,6 @@ async function bootstrap() {
       in: "header",
       type: "http",
       scheme: "bearer",
-      bearerFormat: "Bearer",
 
     }, 'DRACOON Access Token')
     .build();

@@ -1,5 +1,4 @@
 import { CanActivate, ExecutionContext, ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { lastValueFrom, Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import RequestWithUserAccount from './request-with-user.interface';
@@ -16,6 +15,8 @@ export class DracoonAuthGuard implements CanActivate {
     
     // check bearer token
     const bearerTokenHeader = request.headers['authorization'];
+
+    console.log(bearerTokenHeader);
     
     // reject invalid authorization header
     if (!bearerTokenHeader || bearerTokenHeader.split(' ').length <= 1 || bearerTokenHeader.split(' ')[0] !== 'Bearer') throw new UnauthorizedException();
