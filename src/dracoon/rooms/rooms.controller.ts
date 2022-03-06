@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, Query, UseGuards } from "@nestjs/common";
-import { ApiBearerAuth, ApiForbiddenResponse, ApiOkResponse, ApiOperation, ApiQuery, ApiTags, ApiUnauthorizedResponse } from "@nestjs/swagger";
+import { ApiBadRequestResponse, ApiBearerAuth, ApiConflictResponse, ApiCreatedResponse, ApiForbiddenResponse, ApiNoContentResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiPreconditionFailedResponse, ApiQuery, ApiTags, ApiUnauthorizedResponse } from "@nestjs/swagger";
 import { ErrorResponse } from "src/app.models";
 import { DracoonAuthConfigManagerGuard, DracoonAuthGuard } from "../auth/auth.guards";
 import { CreatePersonalRoomDto } from "./dtos/create-room.dto";
@@ -23,6 +23,11 @@ export class RoomsController {
         status: HttpStatus.OK,
         description: 'OK'
     })
+    @ApiBadRequestResponse({
+        status: HttpStatus.BAD_REQUEST,
+        description: 'Bad request',
+        type: ErrorResponse
+    })
     @ApiUnauthorizedResponse({
         status: HttpStatus.UNAUTHORIZED,
         description: 'Unauthorized',
@@ -31,6 +36,16 @@ export class RoomsController {
     @ApiForbiddenResponse({
         status: HttpStatus.FORBIDDEN,
         description: 'Forbidden',
+        type: ErrorResponse
+    })
+    @ApiNotFoundResponse({
+        status: HttpStatus.NOT_FOUND,
+        description: 'Not found',
+        type: ErrorResponse
+    })
+    @ApiPreconditionFailedResponse({
+        status: HttpStatus.PRECONDITION_FAILED,
+        description: 'Precondition failed',
         type: ErrorResponse
     })
     @ApiQuery({
@@ -48,9 +63,14 @@ export class RoomsController {
         summary: 'Create personal room',
         description: 'Create a personal room for a specific user by user id'
     })
-    @ApiOkResponse({
-        status: HttpStatus.OK,
-        description: 'OK'
+    @ApiCreatedResponse({
+        status: HttpStatus.CREATED,
+        description: 'Created'
+    })
+    @ApiBadRequestResponse({
+        status: HttpStatus.BAD_REQUEST,
+        description: 'Bad request',
+        type: ErrorResponse
     })
     @ApiUnauthorizedResponse({
         status: HttpStatus.UNAUTHORIZED,
@@ -60,6 +80,21 @@ export class RoomsController {
     @ApiForbiddenResponse({
         status: HttpStatus.FORBIDDEN,
         description: 'Forbidden',
+        type: ErrorResponse
+    })
+    @ApiNotFoundResponse({
+        status: HttpStatus.NOT_FOUND,
+        description: 'Not found',
+        type: ErrorResponse
+    })
+    @ApiConflictResponse({
+        status: HttpStatus.CONFLICT,
+        description: 'Conflict',
+        type: ErrorResponse
+    })
+    @ApiPreconditionFailedResponse({
+        status: HttpStatus.PRECONDITION_FAILED,
+        description: 'Precondition failed',
         type: ErrorResponse
     })
     @Post('')
@@ -76,6 +111,11 @@ export class RoomsController {
         status: HttpStatus.OK,
         description: 'OK'
     })
+    @ApiBadRequestResponse({
+        status: HttpStatus.BAD_REQUEST,
+        description: 'Bad request',
+        type: ErrorResponse
+    })
     @ApiUnauthorizedResponse({
         status: HttpStatus.UNAUTHORIZED,
         description: 'Unauthorized',
@@ -84,6 +124,21 @@ export class RoomsController {
     @ApiForbiddenResponse({
         status: HttpStatus.FORBIDDEN,
         description: 'Forbidden',
+        type: ErrorResponse
+    })
+    @ApiNotFoundResponse({
+        status: HttpStatus.NOT_FOUND,
+        description: 'Not found',
+        type: ErrorResponse
+    })
+    @ApiConflictResponse({
+        status: HttpStatus.CONFLICT,
+        description: 'Conflict',
+        type: ErrorResponse
+    })
+    @ApiPreconditionFailedResponse({
+        status: HttpStatus.PRECONDITION_FAILED,
+        description: 'Precondition failed',
         type: ErrorResponse
     })
     @Put(':id')
@@ -97,9 +152,14 @@ export class RoomsController {
         summary: 'Delete personal room',
         description: 'Delete a registered personal room by room id'
     })
-    @ApiOkResponse({
+    @ApiNoContentResponse({
         status: HttpStatus.NO_CONTENT,
         description: 'No content'
+    })
+    @ApiBadRequestResponse({
+        status: HttpStatus.BAD_REQUEST,
+        description: 'Bad request',
+        type: ErrorResponse
     })
     @ApiUnauthorizedResponse({
         status: HttpStatus.UNAUTHORIZED,
@@ -109,6 +169,16 @@ export class RoomsController {
     @ApiForbiddenResponse({
         status: HttpStatus.FORBIDDEN,
         description: 'Forbidden',
+        type: ErrorResponse
+    })
+    @ApiNotFoundResponse({
+        status: HttpStatus.NOT_FOUND,
+        description: 'Not found',
+        type: ErrorResponse
+    })
+    @ApiPreconditionFailedResponse({
+        status: HttpStatus.PRECONDITION_FAILED,
+        description: 'Precondition failed',
         type: ErrorResponse
     })
     @Delete(':id')
