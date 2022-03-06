@@ -11,6 +11,8 @@ import { ActionService } from './hooks/action.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { EventService } from './hooks/event.service';
 import { HookEvent } from './hooks/event.entity';
+import { RoomsController } from './rooms/rooms.controller';
+import { RoomsService } from './rooms/rooms.service';
 
 @Module({
   imports: [ 
@@ -44,7 +46,7 @@ import { HookEvent } from './hooks/event.entity';
     }),
     inject: [ConfigService]
   }), TypeOrmModule.forFeature([Hook, HookEvent])],
-  providers: [AuthService, HooksService, ActionService, EventService],
-  controllers: [HooksController, ReceiverController]
+  providers: [AuthService, HooksService, ActionService, EventService, RoomsService],
+  controllers: [HooksController, ReceiverController, RoomsController]
 })
 export class DracoonModule {}

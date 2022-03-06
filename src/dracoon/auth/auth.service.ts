@@ -13,8 +13,6 @@ export class AuthService {
 
     if (!accessToken) throw new UnauthorizedException();
 
-    console.log(accessToken)
-    
     const userInfoUrl = '/api/v4/user/account';
     // axios request config
     const options = {

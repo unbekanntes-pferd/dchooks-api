@@ -1,14 +1,14 @@
 import { EventTypeNames } from "../hook.enums";
 
-export enum MessageType {
+export enum RoomActionType {
 
-    userHook = 'user_hook',
-    nodeHook = 'node_hook',
-    shareHook = 'share_hook',
-    fileRequestHook = 'filerequest_hook'
-
-
+    createRoom = "create.room",
+    deleteRoom = "delete.room",
+    updateRoom = "update.room",
+    syncRooms = "sync.rooms",
+    getRooms = "get.rooms"
 }
+
 
 
 export class Message { 

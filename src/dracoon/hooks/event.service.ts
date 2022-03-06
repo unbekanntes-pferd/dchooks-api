@@ -68,5 +68,13 @@ export class EventService {
 
     }
 
+    async clearHookEvents(hookId: string) {
+
+        const events = await this.getHookEvents(hookId);
+
+        return this.eventRepository.remove(events);
+
+    }
+
 
 }

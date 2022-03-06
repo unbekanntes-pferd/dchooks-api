@@ -26,7 +26,7 @@ export class HookEvent {
     @Column()
     hookType: WebhookType
 
-    @ApiProperty({ enum: WebhookType })
+    @ApiProperty({ enum: EventTypeNames })
     @Column()
     eventType: EventTypeNames
 

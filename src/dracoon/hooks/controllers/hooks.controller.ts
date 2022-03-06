@@ -1,5 +1,5 @@
 import { Controller, Post, UseGuards, Request, HttpStatus, Body, Get, Param, Delete, HttpCode, Put } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiBearerAuth, ApiConflictResponse, ApiCreatedResponse, ApiNoContentResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiBearerAuth, ApiConflictResponse, ApiCreatedResponse, ApiForbiddenResponse, ApiNoContentResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { DracoonAuthConfigManagerGuard, DracoonAuthGuard } from '../../auth/auth.guards';
 import { RegisterWebhookDto } from '../dtos/register-webhook.dto';
 import { HooksService } from '../hooks.service';
@@ -34,6 +34,11 @@ export class HooksController {
     @ApiUnauthorizedResponse({
         status: HttpStatus.UNAUTHORIZED,
         description: 'Unauthorized',
+        type: ErrorResponse
+    })
+    @ApiForbiddenResponse({
+        status: HttpStatus.FORBIDDEN,
+        description: 'Forbidden',
         type: ErrorResponse
     })
     async listHooks() {
@@ -92,6 +97,28 @@ export class HooksController {
     async listHookEvents() {
 
         return this.eventService.getEvents();
+    }
+
+    @UseGuards(DracoonAuthConfigManagerGuard)
+    @Delete('/events')
+    @ApiOperation({
+        summary: 'Clear all webhook events',
+        description: 'Clear (delete) all events of all registered webhooks'
+    })
+    @ApiNoContentResponse({
+        status: HttpStatus.NO_CONTENT,
+        description: 'No content',
+    })
+    @ApiUnauthorizedResponse({
+        status: HttpStatus.UNAUTHORIZED,
+        description: 'Unauthorized',
+        type: ErrorResponse
+    })
+    async clearEvents() {
+
+        await this.eventService.clearEvents();
+
+        return;
     }
 
 
@@ -242,6 +269,43 @@ export class HooksController {
     async getHookEvents(@Param() params: FindOneParams) {
 
         return this.eventService.getHookEvents(params.id);
+    };
+
+    @UseGuards(DracoonAuthConfigManagerGuard)
+    @Delete(':id/events')
+    @ApiOperation({
+        summary: 'Clear webhook events',
+        description: 'Clear (delete) events of registered webhook'
+    })
+    @ApiNoContentResponse({
+        status: HttpStatus.NO_CONTENT,
+        description: 'No content',
+    })
+    @ApiBadRequestResponse({
+        status: HttpStatus.BAD_REQUEST,
+        description: 'Unauthorized',
+        type: ErrorResponse
+    })
+    @ApiUnauthorizedResponse({
+        status: HttpStatus.UNAUTHORIZED,
+        description: 'Unauthorized',
+        type: ErrorResponse
+    })
+    @ApiNotFoundResponse({
+        status: HttpStatus.NOT_FOUND,
+        description: 'Unauthorized',
+        type: ErrorResponse
+    })
+    @ApiParam({
+        name: 'id',
+        type: String,
+        required: true
+    })
+    async clearHookEvents(@Param() params: FindOneParams) {
+
+        await this.eventService.clearHookEvents(params.id);
+
+        return;
     };
 
 }

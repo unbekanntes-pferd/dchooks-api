@@ -16,8 +16,6 @@ export class DracoonAuthGuard implements CanActivate {
     // check bearer token
     const bearerTokenHeader = request.headers['authorization'];
 
-    console.log(bearerTokenHeader);
-    
     // reject invalid authorization header
     if (!bearerTokenHeader || bearerTokenHeader.split(' ').length <= 1 || bearerTokenHeader.split(' ')[0] !== 'Bearer') throw new UnauthorizedException();
     
@@ -30,7 +28,7 @@ export class DracoonAuthGuard implements CanActivate {
     request["user"] = userInfo;
     request["token"] = token;
 
-    // reject if no user info delivered,
+    // reject if no user info delivered
     if (!userInfo) throw new UnauthorizedException();
     
     return true;
