@@ -24,7 +24,7 @@ import { RoomsService } from './rooms/rooms.service';
     useFactory: async (configService: ConfigService) => ({
       transport: Transport.RMQ,
       options: {
-        urls: [...configService.get('rabbit.url')],
+        urls: [configService.get<string>('rabbit.url')],
         queue: 'room_queue'
       }
     })
@@ -36,7 +36,7 @@ import { RoomsService } from './rooms/rooms.service';
     useFactory: async (configService: ConfigService) => ({
       transport: Transport.RMQ,
       options: {
-        urls: [...configService.get('rabbit.url')],
+        urls: [configService.get<string>('rabbit.url')],
         queue: 'email_queue'
       }
     })

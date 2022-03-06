@@ -1,4 +1,8 @@
-export default () => ({
+
+
+export default () => {
+
+  return ({
     port: parseInt(process.env.PORT, 10) || 3000,
     host: process.env.HOST,
     database: {
@@ -16,3 +20,5 @@ export default () => ({
        url: process.env.DRACOON_BASE_URL
    }
   });
+
+} 
