@@ -16,23 +16,32 @@ import { RoomsService } from './rooms/rooms.service';
 
 @Module({
   imports: [ 
-    ClientsModule.register([{
-      name: 'EMAIL_SERVICE',
+
+  ClientsModule.registerAsync([{
+    name: 'ROOM_SERVICE',
+    imports: [ConfigModule],
+    inject: [ConfigService],
+    useFactory: async (configService: ConfigService) => ({
       transport: Transport.RMQ,
       options: {
-        urls: ['amqp://localhost:5672'],
-        queue: 'email_queue'
-      }
-    },
-    {
-      name: 'ROOM_SERVICE',
-      transport: Transport.RMQ,
-      options: {
-        urls: ['amqp://localhost:5672'],
+        urls: [...configService.get('rabbit.url')],
         queue: 'room_queue'
       }
-    },  
-  ]),
+    })
+  }, 
+  {
+    name: 'EMAIL_SERVICE',
+    imports: [ConfigModule],
+    inject: [ConfigService],
+    useFactory: async (configService: ConfigService) => ({
+      transport: Transport.RMQ,
+      options: {
+        urls: [...configService.get('rabbit.url')],
+        queue: 'email_queue'
+      }
+    })
+  }, 
+]),
      HttpModule.registerAsync({
     imports: [ConfigModule],
     useFactory: async (configService: ConfigService) => ({

@@ -9,6 +9,9 @@ export default () => ({
       user: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD
     },
+    rabbit: {
+      url: process.env.RABBIT_MQ_HOST
+    },
    dracoon: {
        url: process.env.DRACOON_BASE_URL
    }
